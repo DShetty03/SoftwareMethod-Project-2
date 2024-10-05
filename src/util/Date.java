@@ -1,3 +1,4 @@
+package util;
 
 import java.util.Calendar;
 
@@ -161,10 +162,10 @@ public class Date implements Comparable <Date>{
         dateToCheck.set(year, month - 1, day);  // Calendar months are 0-based, so subtract 1 from the month
 
         //if date is today or before today
-        if(dateToCheck.before(today) || dateToCheck.equals(today)){
-            return false;
+        if (dateToCheck.compareTo(today) <= 0) {
+            throw new IllegalArgumentException("Appointment date " + dateToCheck + "is a today or a date before today");
         }
-        return true;
+        return false;
     }
 
     //helper to check DOB in Scheduler
@@ -180,10 +181,10 @@ public class Date implements Comparable <Date>{
 
         // If the date is today or after, return false
         if (dateToCheck.after(today) || dateToCheck.equals(today)) {
-            return false;
+            throw new IllegalArgumentException("Patient dob: "+ dateToCheck + "is today or a date after today");
         }
 
-        return true;
+        return false;
     }
 
     //hepler to check if date is within 6 months in Scheduler
@@ -204,9 +205,9 @@ public class Date implements Comparable <Date>{
 
         // Check if the date is not within the next six months
         if (dateToCheck.after(sixMonthsFromToday)){
-            return false;
+            throw new IllegalArgumentException("Appointment date: "+ dateToCheck + "is not within six months");
         }
-        return true;
+        return false;
     }
 
     //helper method to check if an appointment date is the weekend
@@ -221,9 +222,9 @@ public class Date implements Comparable <Date>{
         int dayOfWeek = dateToCheck.get(Calendar.DAY_OF_WEEK);
         // Check if the day is Saturday or Sunday
         if ((dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY)){
-            return false;
+            throw new IllegalArgumentException("Appointment date: " + dateToCheck + "is Saturday or Sunday");
         }
-        return true;
+        return false;
     }
 
 

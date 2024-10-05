@@ -1,6 +1,8 @@
-/**
+package other; /**
  * @author Richard Li - rl902
  */
+
+import util.Date;
 
 /**
  * Represents a profile for a person, including first name, last name, and date of birth.
