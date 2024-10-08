@@ -1,3 +1,5 @@
+package other;
+
 /**
  * Enum representing different medical specialties.
  * Each specialty has its own associated charge for visits.

@@ -1,3 +1,5 @@
+package other;
+
 /**
  * Enum representing various clinic locations.
  * Each location has a county and a zip code.

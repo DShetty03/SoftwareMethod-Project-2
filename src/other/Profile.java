@@ -76,6 +76,21 @@ public class Profile implements Comparable<Profile> {
         return Integer.signum(this.dob.compareTo(other.dob));
     }
 
+    //Equals method (for polymorphism)
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Profile profile = (Profile) obj;
+        return fname.equalsIgnoreCase(profile.fname) &&
+                lname.equalsIgnoreCase(profile.lname) &&
+                dob.equals(profile.dob);
+    }
+
     /**
      * Returns a string representation of the profile, including the first name, last name, and date of birth.
      *
