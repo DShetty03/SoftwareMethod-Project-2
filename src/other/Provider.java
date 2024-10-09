@@ -5,7 +5,7 @@ package other;
  * A Provider has a profile and a practice location. This class also declares the
  * abstract method rate() to be implemented by subclasses.
  *
- * Author: Divit Shetty (dps190)
+ * @author Divit Shetty (dps190)
  */
 public abstract class Provider extends Person {
 

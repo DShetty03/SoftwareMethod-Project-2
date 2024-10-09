@@ -4,7 +4,7 @@ package other;
  * This class represents a Person (could be a patient or a Provider)
  * It serves as the superclass for the Patient and Provider classes.
  *
- * Author: Divit Shetty (dps190)
+ * @author Divit Shetty (dps190)
  */
 public class Person implements Comparable<Person> {
 

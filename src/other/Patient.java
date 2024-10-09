@@ -4,7 +4,7 @@ package other;
  * This class represents a Patient, which extends the Person class.
  * A Patient has a profile and a linked list of visits.
  *
- * Author: Divit Shetty (dps190)
+ * @author Divit Shetty (dps190)
  */
 public class Patient extends Person {
 

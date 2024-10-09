@@ -1,4 +1,5 @@
-package other; /**
+package other;
+/**
  * @author Richard Li - rl902
  */
 
