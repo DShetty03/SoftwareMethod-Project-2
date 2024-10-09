@@ -163,7 +163,7 @@ public class Date implements Comparable <Date>{
 
         //if date is today or before today
         if (dateToCheck.compareTo(today) <= 0) {
-            throw new IllegalArgumentException("Appointment date " + dateToCheck + "is a today or a date before today");
+            throw new IllegalArgumentException("Appointment date " + dateToCheck + "is today or a date before today");
         }
         return false;
     }
