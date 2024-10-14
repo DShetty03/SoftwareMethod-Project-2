@@ -1,4 +1,5 @@
 package other;
+
 /**
  * @author Richard Li - rl902
  * Represents a visit by a patient.

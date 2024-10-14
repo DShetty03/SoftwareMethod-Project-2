@@ -1,4 +1,5 @@
 package other;
 
-public class Radiology {
+public enum Radiology {
+    CATSCAN, ULTRASOUND, XRAY
 }
