@@ -163,7 +163,7 @@ public class Date implements Comparable <Date>{
 
         //if date is today or before today
         if (dateToCheck.compareTo(today) <= 0) {
-            throw new IllegalArgumentException("Appointment date " + dateToCheck + "is today or a date before today");
+            throw new IllegalArgumentException(String.format("Appointment date: %02d/%02d/%04d is today or a date before today", month, day, year));
         }
         return false;
     }
@@ -181,7 +181,8 @@ public class Date implements Comparable <Date>{
 
         // If the date is today or after, return false
         if (dateToCheck.after(today) || dateToCheck.equals(today)) {
-            throw new IllegalArgumentException("Patient dob: "+ dateToCheck + "is today or a date after today");
+            throw new IllegalArgumentException(String.format("Patient dob: %02d/%02d/%04d is today or a date after today",
+                    month, day, year));
         }
 
         return false;
@@ -205,7 +206,8 @@ public class Date implements Comparable <Date>{
 
         // Check if the date is not within the next six months
         if (dateToCheck.after(sixMonthsFromToday)){
-            throw new IllegalArgumentException("Appointment date: "+ dateToCheck + "is not within six months");
+            throw new IllegalArgumentException(String.format("Appointment date: %02d/%02d/%04d is not within six months"
+            ,month, day,year));
         }
         return false;
     }
@@ -222,7 +224,8 @@ public class Date implements Comparable <Date>{
         int dayOfWeek = dateToCheck.get(Calendar.DAY_OF_WEEK);
         // Check if the day is Saturday or Sunday
         if ((dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY)){
-            throw new IllegalArgumentException("Appointment date: " + dateToCheck + "is Saturday or Sunday");
+            throw new IllegalArgumentException(String.format("Appointment date: %02d/%02d/%04d is Saturday or Sunday",
+                    month, day, year));
         }
         return false;
     }

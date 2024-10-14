@@ -72,12 +72,40 @@ public class ClinicManager {
         try {
             // Parse the date and timeslot
             Date appointmentDate = parseDate(tokens[1]);
+            if (!appointmentDate.isValid()){
+                System.out.println("Appointment Date: " + appointmentDate + " isn't a valid calendar date!");
+                return;
+            }
+            try {
+                appointmentDate.isTodayOrBefore();  // Will throw an exception if the date is invalid
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+                return;
+            }
+            try {
+                appointmentDate.isWithinSixMonths();  // Will throw an exception if the date is not within 6 months
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+                return;
+            }
+            try {
+                appointmentDate.isWeekend();  // Will throw an exception if the date is a weekend
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+                return;
+            }
             Timeslot timeslot = new Timeslot(Integer.parseInt(tokens[2]));
 
             // Parse the patient information
             String firstName = tokens[3];
             String lastName = tokens[4];
             Date dob = parseDate(tokens[5]);
+            try{
+                dob.isTodayOrAfter();
+            } catch (IllegalArgumentException e){
+                System.out.println(e.getMessage());
+                return;
+            }
             Profile patientProfile = new Profile(firstName, lastName, dob);
             Patient patient = new Patient(patientProfile);
 
@@ -148,7 +176,7 @@ public class ClinicManager {
                         appointmentProvider.getLocation().equals(technician.getLocation()) &&
                         imagingAppointment.getRoom().equals(roomType) &&
                         imagingAppointment.getTimeslot().equals(timeslot)) {
-                    return false;  // Room is already booked 
+                    return false;  // Room is already booked
                 }
             }
         }
