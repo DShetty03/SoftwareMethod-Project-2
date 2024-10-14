@@ -114,7 +114,6 @@ public class ClinicManager {
      */
     // Method to assign the next available technician for a specific room type and timeslot
     private Technician assignTechnicianForService(Timeslot timeslot, Radiology roomType) {
-        // Assuming you maintain a circular list of technicians
         for (int i = 0; i < providers.size(); i++) {
             Provider provider = providers.get(i);
             if (provider instanceof Technician) {
@@ -131,14 +130,14 @@ public class ClinicManager {
 
     // Check if the technician is available for the given timeslot and room type
     private boolean isTechnicianAvailable(Technician technician, Timeslot timeslot, Radiology roomType) {
-        // First, check if the technician is available for the requested timeslot
+        // First step, check if the technician is available for the requested timeslot
         for (Appointment appointment : appointments) {
             // Check if the appointment involves the same technician and timeslot
             if (appointment.getProvider().equals(technician) && appointment.getTimeslot().equals(timeslot)) {
-                return false;  // Technician is already booked for this timeslot
+                return false;  //Already booked
+
             }
         }
-
         // Then, check if the room at the technician's location is available for the requested timeslot and room type
         for (Appointment appointment : appointments) {
             // Check if the appointment is for the same location, room type, and timeslot
@@ -149,11 +148,10 @@ public class ClinicManager {
                         appointmentProvider.getLocation().equals(technician.getLocation()) &&
                         imagingAppointment.getRoom().equals(roomType) &&
                         imagingAppointment.getTimeslot().equals(timeslot)) {
-                    return false;  // Room is already booked for this timeslot and service type
+                    return false;  // Room is already booked 
                 }
             }
         }
-        // If no conflicts were found, the technician and room are available
         return true;
     }
 
