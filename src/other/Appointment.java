@@ -10,10 +10,10 @@ import util.Date;
  * The appointment includes details such as the date, timeslot, patient profile, and provider.
  */
 public class Appointment implements Comparable<Appointment> {
-    private Date date;
-    private Timeslot timeslot;
-    private Profile patient;
-    private Provider provider;
+    protected Date date;
+    protected Timeslot timeslot;
+    protected Person patient;
+    protected Person provider;
 
     /**
      * Constructs an Appointment instance with the specified date, timeslot, patient, and provider.
@@ -23,7 +23,7 @@ public class Appointment implements Comparable<Appointment> {
      * @param patient the Profile of the patient associated with the appointment
      * @param provider the Provider assigned to the appointment
      */
-    public Appointment(Date date, Timeslot timeslot, Profile patient, Provider provider) {
+    public Appointment(Date date, Timeslot timeslot, Person patient, Person provider) {
         this.date = date;
         this.timeslot = timeslot;
         this.patient = patient;
@@ -53,7 +53,7 @@ public class Appointment implements Comparable<Appointment> {
      *
      * @return the patient profile
      */
-    public Profile getPatient() {
+    public Person getPatient() {
         return patient;
     }
 
@@ -62,8 +62,12 @@ public class Appointment implements Comparable<Appointment> {
      *
      * @return the provider for the appointment
      */
-    public Provider getProvider() {
+    public Person getProvider() {
         return provider;
+    }
+
+    public Location getLocation() {
+        return provider.getLocation();
     }
 
     /**
