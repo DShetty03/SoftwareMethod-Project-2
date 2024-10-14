@@ -22,6 +22,8 @@ public class Technician extends Provider {
         this.ratePerVisit = ratePerVisit;
     }
 
+
+
     /**
      * Get the rate per visit for the technician.
      *
@@ -40,6 +42,7 @@ public class Technician extends Provider {
     public void setRatePerVisit(int ratePerVisit) {
         this.ratePerVisit = ratePerVisit;
     }
+
 
     /**
      * Return a string representation of the technician's profile and rate.

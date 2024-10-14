@@ -67,7 +67,10 @@ public class Appointment implements Comparable<Appointment> {
     }
 
     public Location getLocation() {
-        return provider.getLocation();
+        if (provider instanceof Provider) {
+            return ((Provider) provider).getLocation();  // Cast to Provider to access getLocation()
+        }
+        return null;
     }
 
     /**
@@ -75,9 +78,11 @@ public class Appointment implements Comparable<Appointment> {
      *
      * @return the cost of the appointment
      */
-    public int getCost() {
-        Speciality specialty = provider.getSpecialty();
-        return specialty.getCharge();
+    public Speciality getSpeciality() {
+        if (provider instanceof Doctor) {
+            return ((Doctor) provider).getSpeciality();  // Cast to Doctor to access getSpeciality()
+        }
+        return null;  // Return null if provider is not a Doctor
     }
 
     @Override
@@ -110,12 +115,29 @@ public class Appointment implements Comparable<Appointment> {
 
     @Override
     public String toString() {
-        String providerName = provider.toString();
-        String providerTown = provider.getLocation().toString();
-        String providerSpec = provider.getSpecialty().toString();
-        String patientDetails = String.format("%s %s %s", patient.getFname(), patient.getLname(), patient.getDob().toString());
-        return String.format("%s %s %s [%s, %s, %s]", date.toString(), timeslot.toString(), patientDetails, providerName, providerTown, providerSpec);
+        // Extract the provider's name
+        String providerName = provider.toString();  // Assuming provider's toString provides the name
+
+        // Extract the provider's location (town) if the provider is a type of Provider
+        String providerTown = (provider instanceof Provider) ? ((Provider) provider).getLocation().toString() : "N/A";
+
+        // Extract the provider's speciality if the provider is a Doctor
+        String providerSpec = (provider instanceof Doctor) ? ((Doctor) provider).getSpeciality().toString() : "N/A";
+
+        // Extract the patient details
+        String patientDetails = patient.toString();  // Assuming patient's toString provides relevant details
+
+        // Format the output string
+        return String.format("%s %s %s [%s, %s, %s]",
+                date.toString(),
+                timeslot.toString(),
+                patientDetails,
+                providerName,
+                providerTown,
+                providerSpec
+        );
     }
+
 
     /**
      * Testbed main method to demonstrate the functionality of the Appointment class.
@@ -152,5 +174,7 @@ public class Appointment implements Comparable<Appointment> {
         System.out.println(appointment3);
     }
 
+
      */
+
 }

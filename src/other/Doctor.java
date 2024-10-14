@@ -16,10 +16,10 @@ public class Doctor extends Provider {
      *
      * @param profile The profile of the doctor.
      * @param location The practice location of the doctor.
-     * @param specialty The specialty of the doctor.
+     * @param speciality The specialty of the doctor.
      * @param npi The NPI (National Provider Identification) of the doctor.
      */
-    public Doctor(Profile profile, Location location, Speciality specialty, String npi) {
+    public Doctor(Profile profile, Location location, Speciality speciality, String npi) {
         super(profile, location);
         this.speciality = speciality;
         this.npi = npi;
@@ -69,6 +69,7 @@ public class Doctor extends Provider {
      */
     @Override
     public String toString() {
-        return super.toString() + ", Specialty: " + this.speciality.toString() + ", NPI: " + this.npi;
+        return super.toString() + ", Specialty: " + speciality + ", NPI: " + this.npi;
     }
+
 }
