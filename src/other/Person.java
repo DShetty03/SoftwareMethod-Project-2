@@ -1,5 +1,7 @@
 package other;
 
+import util.Date;
+
 /**
  * This class represents a Person (could be a patient or a Provider)
  * It serves as the superclass for the Patient and Provider classes.
@@ -17,6 +19,33 @@ public class Person implements Comparable<Person> {
      */
     public Person(Profile profile) {
         this.profile = profile;
+    }
+
+    /**
+     * Returns the first name of the profile.
+     *
+     * @return the first name
+     */
+    public String getFName() {
+        return profile.getFname();
+    }
+
+    /**
+     * Returns the last name of the profile.
+     *
+     * @return the last name
+     */
+    public String getLName() {
+        return profile.getLname();
+    }
+
+    /**
+     * Returns the date of birth of the profile.
+     *
+     * @return the date of birth
+     */
+    public Date getDOB() {
+        return profile.getDob();
     }
 
     /**
