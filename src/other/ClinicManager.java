@@ -2,7 +2,7 @@ package other;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
-import util.*;
+import util.Date;
 
 /**
  * This class represents the entire scheduler of the program.
