@@ -64,7 +64,10 @@ public class Sort {
                 int dobCompare = a1.getPatient().getDOB().compareTo(a2.getPatient().getDOB());
                 if (dobCompare != 0) return dobCompare;
 
-                return a1.getDate().compareTo(a2.getDate());
+                dateCompare = a1.getDate().compareTo(a2.getDate());
+                if (dateCompare != 0) return dateCompare;
+
+                return a1.getTimeslot().compareTo(a2.getTimeslot());
 
             case 'L':
                 // Sort by county name, then appointment date and time
@@ -110,23 +113,25 @@ public class Sort {
     }
 
     /**
-     * Sorts the list of providers by their county.
+     * Sorts the list of providers by their last name.
      *
      * @param list the list of providers to sort
      */
     public static void provider(List<Provider> list) {
         int n = list.size();
-
-        // Bubble Sort
+        // Bubble sort implementation
         for (int i = 0; i < n - 1; i++) {
             for (int j = 0; j < n - i - 1; j++) {
-                Provider p1 = list.get(j);
-                Provider p2 = list.get(j + 1);
+                // Compare providers by last name
+                Provider currentProvider = list.get(j);
+                Provider nextProvider = list.get(j + 1);
 
-                if (p1.getLocation().compareTo(p2.getLocation()) > 0) {
-                    // Swap using get() and set() methods
-                    list.set(j, p2);
-                    list.set(j + 1, p1);
+                // Compare last names, if current > next, swap them
+                if (currentProvider.getLName().compareTo(nextProvider.getLName()) > 0) {
+                    // Swap providers
+                    Provider temp = list.get(j);
+                    list.set(j, list.get(j + 1));
+                    list.set(j + 1, temp);
                 }
             }
         }

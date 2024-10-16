@@ -33,26 +33,25 @@ public class ClinicManager {
                 rescheduleAppointment(tokens);
                 break;
             case "PA":
-                sorting('A');
+                sortingApp('A');
                 break;
             case "PP":
-                sorting('P');
+                sortingApp('P');
                 break;
             case "PL":
-                sorting('L');
+                sortingApp('L');
                 break;
             case "PS":
-                //printBillingStatements();
-                //billing statements
+                printBillingStatements();
                 break;
             case "PO":
-                sorting('O');
+                sortingApp('O');
                 break;
             case "PI":
-                sorting('I');
+                sortingApp('I');
                 break;
             case "PC":
-                sorting('C');
+                printCreditStatements();
                 break;
             case "Q":
                 System.out.println("Scheduler is terminated.");
@@ -63,7 +62,7 @@ public class ClinicManager {
     }
 
     /**
-     * Handle the T command for technician appointments (imaging services).
+     * Handle the D command for technician appointments (imaging services).
      *
      * @param tokens the parsed input tokens
      */
@@ -379,14 +378,84 @@ public class ClinicManager {
         }
         return true;
     }
+    /**
+     * Sorts the list of appointments based on the given key.
+     *
+     * @param key the sorting key:
+     *            A - sort by date, time, provider's name
+     *            P - sort by patient (last name, first name, dob, date, time)
+     *            L - sort by county name, date, time
+     *            O - sort office appointments first, then by county, date, time
+     *            I - sort imaging appointments first, then by county, date, time
+     */
+    private void sortingApp (char key){
+        Sort.appointment(appointments, key);
+        if (key == 'A'){
+            System.out.println("** All Appointments ordered by date/time/provider **");
+            for(int i = 0; i<appointments.size(); i++){
+                System.out.println(appointments.get(i).toString());
+            }
+            System.out.println("** end of list **");
 
-    private void sorting (char key){
-        if (key == 'C'){
-            //Sort.provider();
-        }else {
-            Sort.appointment(appointments, key);
+        } else if (key == 'P'){
+            System.out.println("** All Appointments ordered by patient/date/time **");
+            for(int i = 0; i<appointments.size(); i++){
+                System.out.println(appointments.get(i).toString());
+            }
+            System.out.println("** end of list **");
+
+        } else if (key == 'L'){
+            System.out.println("** All Appointments ordered by county/date/time **");
+            for(int i = 0; i<appointments.size(); i++){
+                System.out.println(appointments.get(i).toString());
+            }
+            System.out.println("** end of list **");
+
+        } else if (key == 'O'){
+            System.out.println("** List of office appointments ordered by county/date/time **");
+            for(int i = 0; i<appointments.size(); i++){
+                if (!(appointments.get(i) instanceof Imaging)){
+                    System.out.println(appointments.get(i).toString());
+                }
+
+            }
+            System.out.println("** end of list **");
+
+        } else if (key == 'I'){
+            System.out.println("** List of radiology appointments ordered by county/date/time **");
+            for(int i = 0; i<appointments.size(); i++){
+                if (appointments.get(i) instanceof Imaging){
+                    System.out.println(appointments.get(i).toString());
+                }
+            }
+            System.out.println("** end of list **");
         }
+    }
 
+    private void printCreditStatements () {
+        System.out.println("** Credit amount ordered by provider **");
+        Sort.provider(providers);
+        for (int i = 0; i < providers.size(); i++) {
+            Provider provider = providers.get(i);
+            int appointmentCount = 0;
+
+            // Loop through appointments to count the ones for the current provider
+            for (int j = 0; j < appointments.size(); j++) {
+                Appointment appointment = appointments.get(j);
+
+                // If the appointment is for the current provider, increment the count
+                if (appointment.getProvider().equals(provider)) {
+                    appointmentCount++;
+                }
+            }
+
+            // Calculate total payment due for this provider
+            double totalDue = appointmentCount * provider.rate();
+
+            // Print out the total amount due for the provider
+            System.out.println(provider.getFName() + " " + provider.getLName() + " " + provider.getDOB() + " " + "[Credit amount: $"  + totalDue + "]");
+        }
+        System.out.println("** end of list **");
     }
 
     //Method to generate billing statements (PS command)
@@ -395,19 +464,75 @@ public class ClinicManager {
      */
     private void printBillingStatements() {
         System.out.println("** Billing statement ordered by patient **");
+        List<Patient> patients = new List<>();
 
-        //counter for numbering the list
-        int counter = 1;
-
-        // Loop through each appointment in appointmentsList
+        //make a list of patients
         for (int i = 0; i < appointments.size(); i++) {
-            Appointment appointment = appointments.get(i);  // Get the appointment
-            Patient patient = appointment.getPatient();  // Get the profile of the patient
+            // Get the patient from each appointment
+            Patient currentPatient = appointments.get(i).getPatient();
 
-            if (patient != null) {
-                System.out.println("(" + counter + ") " + patient);
-                counter++;
+            // Check if the patient is already in the uniquePatients list
+            if (!patients.contains(currentPatient)) {
+                // If not, add the patient to the uniquePatients list
+                patients.add(currentPatient);
             }
+        }
+
+        //add the visits for each patient
+        for (int i = 0; i < patients.size(); i++) {
+            Patient currentPatient = patients.get(i);
+
+            // Loop through the list of appointments
+            for (int j = 0; j < appointments.size(); j++) {
+                Appointment currentAppointment = appointments.get(j);
+
+                // Check if the current appointment is for the current patient
+                if (currentAppointment.getPatient().equals(currentPatient)) {
+                    // Add this appointment as a visit to the patient
+                    Visit newVisit = new Visit(currentAppointment);
+                    currentPatient.addVisit(newVisit);
+                }
+            }
+        }
+
+        //Sort the patients by last name
+        int n = patients.size();
+        boolean swapped;
+
+        // Bubble sort
+        do {
+            swapped = false;
+            for (int i = 0; i < n - 1; i++) {
+                Patient p1 = patients.get(i);
+                Patient p2 = patients.get(i + 1);
+
+                // Compare the last names
+                if (p1.getLName().compareTo(p2.getLName()) > 0) {
+                    // Swap the patients if they are in the wrong order
+                    Patient temp = p1;
+                    patients.set(i, p2);
+                    patients.set(i + 1, temp);
+                    swapped = true;
+                }
+            }
+            n--;  // Reduce the range of comparisons as largest element is already in place
+        } while (swapped);
+
+        //for each patient, count the money due and print it out.
+        for (int i = 0; i < patients.size(); i++) {
+            Patient patient = patients.get(i);
+            Visit head = patient.getVisit();
+
+            // Sum the total cost for this patient's visits
+            double totalCost = 0;
+            Visit current = head;
+            while (current != null) {
+                totalCost += current.getAppointment().getProvider().rate();
+                current = current.getNext();
+            }
+
+            // Print the total cost for this patient
+            System.out.println(patient.getFName() + " " + patient.getLName() + " " + patient.getDOB() + "[Credit amount: $" + totalCost + "]");
         }
 
         System.out.println("** end of list **");
