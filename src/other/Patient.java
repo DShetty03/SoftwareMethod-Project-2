@@ -89,6 +89,6 @@ public class Patient extends Person {
      */
     @Override
     public String toString() {
-        return "Patient: " + this.profile.toString();
+        return this.profile.toString();
     }
 }

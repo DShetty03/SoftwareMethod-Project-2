@@ -311,7 +311,7 @@ public class ClinicManager {
                         appointments.remove(appointment);
                         appointments.add(updatedAppointment);
 
-                        System.out.println("Appointment rescheduled.");
+                        System.out.println("Rescheduled to " + updatedAppointment.toString());
                     } else {
                         System.out.println("Provider is not available for the new timeslot.");
                     }

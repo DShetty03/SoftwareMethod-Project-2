@@ -2,7 +2,6 @@ package other;
 
 import util.Date;
 
-
 public class Imaging extends Appointment {
     private Radiology room;
 

@@ -128,13 +128,11 @@ public class Appointment implements Comparable<Appointment> {
         String patientDetails = patient.toString();  // Assuming patient's toString provides relevant details
 
         // Format the output string
-        return String.format("%s %s %s [%s, %s, %s]",
+        return String.format("%s %s %s %s",
                 date.toString(),
                 timeslot.toString(),
                 patientDetails,
-                providerName,
-                providerTown,
-                providerSpec
+                providerName
         );
     }
 

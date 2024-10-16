@@ -55,6 +55,6 @@ public abstract class Provider extends Person {
      */
     @Override
     public String toString() {
-        return this.profile.toString() + ", Location: " + this.location.toString();
+        return "[" + this.profile.toString() + ", Location: " + this.location.toString() + "] ";
     }
 }
