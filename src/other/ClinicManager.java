@@ -251,7 +251,7 @@ public class ClinicManager {
 
             if (appointmentToCancel != null) {
                 appointments.remove(appointmentToCancel);
-                System.out.println("Appointment canceled.");
+                System.out.println( appointmentToCancel + " --- Appointment has been canceled.");
             } else {
                 System.out.println("Appointment not found.");
             }
