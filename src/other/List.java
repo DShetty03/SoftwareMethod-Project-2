@@ -2,7 +2,6 @@ package other;
 
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.Date;
 
 /**
  * A generic array-based List class that stores objects of type E.
