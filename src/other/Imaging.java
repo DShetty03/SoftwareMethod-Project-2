@@ -2,6 +2,12 @@ package other;
 
 import util.Date;
 
+/**
+ * This class represents an imaging appointment, which extends the Appointment class.
+ * An imaging appointment has a date, timeslot, patient, provider, and a room type.
+ *
+ * @author Richard Li (rl902)
+ */
 public class Imaging extends Appointment {
     private Radiology room;
 

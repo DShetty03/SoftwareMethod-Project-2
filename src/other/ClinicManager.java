@@ -4,6 +4,13 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 import util.*;
 
+/**
+ * This class represents the entire scheduler of the program.
+ * This runs the command line and takes in commands.
+ *
+ * @author Divit Shetty (dps190)
+ * @author Richard Li (rl902)
+ */
 
 public class ClinicManager {
     private List<Appointment> appointments;
@@ -260,7 +267,13 @@ public class ClinicManager {
             System.out.println("Invalid command!");
         }
     }
-
+    /**
+     * checks if this provider has an opening at this time slot
+     *
+     * @param provider the provider specified
+     * @param date the date that needs to be checked
+     * @param timeslot  the time slot that needs to be checked
+     */
     private boolean providerAvailableForTimeslot(Provider provider, Date date, Timeslot timeslot) {
         for (int i = 0; i < appointments.size(); i++) {
             Appointment appointment = appointments.get(i);
@@ -280,8 +293,6 @@ public class ClinicManager {
      *
      * @param tokens the array of appointment details from the command line
      */
-
-
     private void rescheduleAppointment(String[] tokens) {
         try {
             Date appointmentDate = parseDate(tokens[1]);
@@ -320,7 +331,7 @@ public class ClinicManager {
             }
 
             if (!appointmentFound) {
-                System.out.println("Appointment not found.");
+                System.out.println(tempAppointment + " does not exist");
             }
         } catch (IllegalArgumentException e) { //catch invalid timeslots
             System.out.println(e.getMessage());
@@ -380,6 +391,7 @@ public class ClinicManager {
     }
     /**
      * Sorts the list of appointments based on the given key.
+     * prints out all the appointments according to the key's order
      *
      * @param key the sorting key:
      *            A - sort by date, time, provider's name
@@ -432,6 +444,9 @@ public class ClinicManager {
         }
     }
 
+    /**
+     * Prints the credit statements for all providers. (PC command)
+     */
     private void printCreditStatements () {
         System.out.println("** Credit amount ordered by provider **");
         Sort.provider(providers);
