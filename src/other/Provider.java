@@ -22,6 +22,10 @@ public abstract class Provider extends Person {
         this.location = location;
     }
 
+    public Profile getProfile() {
+        return this.profile;
+    }
+
     /**
      * Get the practice location of the provider.
      *

@@ -15,6 +15,7 @@ import util.Date;
 public class ClinicManager {
     private List<Appointment> appointments;
     private List<Provider> providers; //doctors and technicians
+    private List<Technician> technicianRotation;
     private Scanner scanner;
 
     public ClinicManager() {
@@ -106,6 +107,10 @@ public class ClinicManager {
             String firstName = tokens[3];
             String lastName = tokens[4];
             Date dob = parseDate(tokens[5]);
+            if (!dob.isValid()){
+                System.out.println("Patient dob: " + dob + " isn't a valid calendar date!");
+                return;
+            }
             try{
                 dob.isTodayOrAfter();
             } catch (IllegalArgumentException e){
@@ -198,6 +203,10 @@ public class ClinicManager {
             String firstName = tokens[3];
             String lastName = tokens[4];
             Date dob = parseDate(tokens[5]);
+            if (!dob.isValid()){
+                System.out.println("Patient dob: " + dob + " isn't a valid calendar date!");
+                return;
+            }
             try{
                 dob.isTodayOrAfter();
             } catch (IllegalArgumentException e){
@@ -348,14 +357,23 @@ public class ClinicManager {
      * @return the assigned technician, or null if no technician is available
      */
     // Method to assign the next available technician for a specific room type and timeslot
+    private int technicianRotationIndex = 0;
     private Technician assignTechnicianForService(Timeslot timeslot, Radiology roomType) {
-        for (int i = 0; i < providers.size(); i++) {
-            Provider provider = providers.get(i);
+        int technicianCount = technicianRotation.size();
+
+        // Start from the current technician index and rotate through the list
+        for (int i = 0; i < technicianCount; i++) {
+            // Calculate the technician's index in a circular manner
+            int currentIndex = (technicianRotationIndex + i) % technicianCount;
+            Provider provider = technicianRotation.get(currentIndex);
+
             if (provider instanceof Technician) {
                 Technician technician = (Technician) provider;
 
-                // Check if the technician is available at the requested timeslot
+                // Check if the technician is available at the requested timeslot and room type
                 if (isTechnicianAvailable(technician, timeslot, roomType)) {
+                    // Update the rotation index to point to the next technician for future assignments
+                    technicianRotationIndex = (currentIndex + 1) % technicianCount;
                     return technician;
                 }
             }
@@ -574,6 +592,8 @@ public class ClinicManager {
         loadProviders();
         System.out.println("Providers loaded successfully.");
         displayProviders();
+        displayTechnicianRotation();
+
     }
     // Display the loaded providers
     private void displayProviders() {
@@ -612,6 +632,32 @@ public class ClinicManager {
             System.out.println("Error: providers.txt file not found.");
         }
 
+    }
+
+    // Method to initialize and display the rotation list for technicians
+    private void displayTechnicianRotation() {
+        technicianRotation = new List<>();
+
+        // Add only technicians to the technician rotation list
+        for (Provider provider : providers) {
+            if (provider instanceof Technician) {
+                technicianRotation.add((Technician) provider);
+            }
+        }
+
+        // Display the technician rotation list
+        System.out.println("Rotation list for the technicians:");
+        for (int i = 0; i < technicianRotation.size(); i++) {
+            Technician tech = technicianRotation.get(i);
+            System.out.print(tech.getProfile() + " (" + tech.getLocation() + ")");
+
+            // Add arrows between technicians, and wrap around at the end
+            if (i < technicianRotation.size() - 1) {
+                System.out.print(" --> ");
+            } else {
+                System.out.println();  // End the line after the last technician
+            }
+        }
     }
 
 
