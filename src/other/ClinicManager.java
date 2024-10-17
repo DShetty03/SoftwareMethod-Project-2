@@ -491,6 +491,7 @@ public class ClinicManager {
                 // If not, add the patient to the uniquePatients list
                 patients.add(currentPatient);
             }
+
         }
 
         //add the visits for each patient
