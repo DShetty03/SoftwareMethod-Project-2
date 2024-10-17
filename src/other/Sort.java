@@ -2,6 +2,8 @@ package other;
 
 /**
  * A generic Sort class for sorting elements in a List.
+ *
+ * @author Richard Li (rl902)
  */
 public class Sort {
     /**

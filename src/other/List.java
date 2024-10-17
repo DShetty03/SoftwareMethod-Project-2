@@ -7,6 +7,7 @@ import java.util.Iterator;
  * A generic array-based List class that stores objects of type E.
  * It allows adding, removing, and checking for the existence of elements.
  *
+ * @author Richard Li (rl902)
  * @param <E> the type of elements in this list
  */
 public class List<E> implements Iterable<E> {
