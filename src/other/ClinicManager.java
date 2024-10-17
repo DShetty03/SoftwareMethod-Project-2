@@ -387,6 +387,24 @@ public class ClinicManager {
     }
 
     // Check if the technician is available for the given timeslot and room type
+    /**
+     * Checks if the given technician is available for the specified timeslot and room type.
+     *
+     * This method first checks whether the technician has an appointment at the requested
+     * timeslot. If the technician is already booked, it returns false.
+     *
+     * It then checks if the requested room type at the technician's location is already booked
+     * for the same timeslot by another technician. If so, it returns false, indicating that the
+     * room is unavailable.
+     *
+     * If both checks pass, it returns true, indicating that the technician and room are available.
+     *
+     * @param technician The technician to check availability for.
+     * @param timeslot The timeslot for which availability is being checked.
+     * @param roomType The type of room (Radiology) required for the appointment.
+     * @return {@code true} if the technician and room are available for the timeslot,
+     *         {@code false} otherwise.
+     */
     private boolean isTechnicianAvailable(Technician technician, Timeslot timeslot, Radiology roomType) {
         // First step, check if the technician is available for the requested timeslot
         for (Appointment appointment : appointments) {
@@ -608,6 +626,10 @@ public class ClinicManager {
 
     //Read and load providers
     // Initialize and load providers (from providers.txt)
+    /**
+     * Initializes the system by loading providers and displaying them.
+     * This method also displays the rotation list for the technicians.
+     */
     public void initialize() {
         loadProviders();
         System.out.println("Providers loaded successfully.");
@@ -616,6 +638,10 @@ public class ClinicManager {
 
     }
     // Display the loaded providers
+    /**
+     * Displays the loaded providers.
+     * This method iterates through the list of providers and prints their details to the console.
+     */
     private void displayProviders() {
         System.out.println("Loaded Providers:");
         for (Provider provider : providers) {
@@ -624,6 +650,17 @@ public class ClinicManager {
     }
 
     // Load providers from providers.txt
+    /**
+     * Loads the providers from the "providers.txt" file.
+     * The method parses each line in the file, identifies if the line corresponds to a Doctor or Technician,
+     * and creates an instance of the respective class. The providers are then added to the providers list.
+     *
+     * The file format should follow:
+     * D <firstName> <lastName> <dob> <location> <speciality> <npi> for Doctors
+     * T <firstName> <lastName> <dob> <location> <rate> for Technicians
+     *
+     * @throws FileNotFoundException If the "providers.txt" file is not found.
+     */
     private void loadProviders() {
         try {
             Scanner scanner = new Scanner(new File("providers.txt"));
@@ -655,6 +692,11 @@ public class ClinicManager {
     }
 
     // Method to initialize and display the rotation list for technicians
+    /**
+     * Displays the rotation list of technicians.
+     * This method filters the providers list to include only technicians, adds them to the
+     * technicianRotation list, and prints the rotation order of technicians.
+     */
     private void displayTechnicianRotation() {
         technicianRotation = new List<>();
 
