@@ -298,7 +298,7 @@ public class ClinicManager {
             Date appointmentDate = parseDate(tokens[1]);
             Timeslot currentTimeslot = new Timeslot(Integer.parseInt(tokens[2]));
             Profile profile = new Profile(tokens[3], tokens[4], parseDate(tokens[5]));
-            Person currentPatient = new Person(profile);
+            Person currentPatient = new Patient(profile);
             Timeslot newTimeslot = new Timeslot(Integer.parseInt(tokens[6]));
 
             Appointment tempAppointment = new Appointment(appointmentDate, currentTimeslot, currentPatient, null);
@@ -547,7 +547,7 @@ public class ClinicManager {
             }
 
             // Print the total cost for this patient
-            System.out.println(patient.getFName() + " " + patient.getLName() + " " + patient.getDOB() + "[Credit amount: $" + totalCost + "]");
+            System.out.println(patient.getFName() + " " + patient.getLName() + " " + patient.getDOB() + " [Credit amount: $" + totalCost + "]");
         }
 
         System.out.println("** end of list **");
