@@ -15,6 +15,7 @@ import util.Date;
 public class ClinicManager {
     private List<Appointment> appointments;
     private List<Provider> providers; //doctors and technicians
+    private List<Technician> technicianRotation;
     private Scanner scanner;
 
     public ClinicManager() {
@@ -106,6 +107,10 @@ public class ClinicManager {
             String firstName = tokens[3];
             String lastName = tokens[4];
             Date dob = parseDate(tokens[5]);
+            if (!dob.isValid()){
+                System.out.println("Patient dob: " + dob + " isn't a valid calendar date!");
+                return;
+            }
             try{
                 dob.isTodayOrAfter();
             } catch (IllegalArgumentException e){
@@ -144,9 +149,9 @@ public class ClinicManager {
                 appointments.add(newAppointment);
 
                 System.out.printf("%s %s %s %s [%s, %s, %s %s, %s] booked.%n",
-                            appointmentDate,  // MM/DD/YYYY
-                            timeslot,         // hh:mm AM/PM
-                            patient.getFName(), patient.getLName(), patient.getDOB(),
+                        appointmentDate,  // MM/DD/YYYY
+                        timeslot,         // hh:mm AM/PM
+                        patient.getFName(), patient.getLName(), patient.getDOB(),
                         assignedDoctor.getFName(),
                         assignedDoctor.getLocation().getCity(),
                         assignedDoctor.getLocation().getCounty(),
@@ -198,6 +203,10 @@ public class ClinicManager {
             String firstName = tokens[3];
             String lastName = tokens[4];
             Date dob = parseDate(tokens[5]);
+            if (!dob.isValid()){
+                System.out.println("Patient dob: " + dob + " isn't a valid calendar date!");
+                return;
+            }
             try{
                 dob.isTodayOrAfter();
             } catch (IllegalArgumentException e){
@@ -239,18 +248,23 @@ public class ClinicManager {
     private void cancelAppointment(String[] tokens) {
         try {
             // C,9/30/2024,1,John,Doe,12/13/1989
-            Date appointmentDate = parseDate(tokens[1]);
-            Timeslot timeslot = new Timeslot(Integer.parseInt(tokens[2]));
-            Profile profile = new Profile(tokens[3], tokens[4], parseDate(tokens[5]));
-            Person currentPatient = new Person(profile);
+            Date appointmentDateCAN = parseDate(tokens[1]);
+            Timeslot timeslotCAN = new Timeslot(Integer.parseInt(tokens[2]));
+            Profile profileCAN = new Profile(tokens[3], tokens[4], parseDate(tokens[5]));
+            Person currentPatientCAN = new Person(profileCAN);
             // We create a temporary appointment object without a provider since it’s not needed for comparison.
-            Appointment tempAppointment = new Appointment(appointmentDate, timeslot, currentPatient, null);
-
             // We need to manually check for a match in the appointments list by comparing date, timeslot, and profile.
+
             Appointment appointmentToCancel = null;
             for (int i = 0; i < appointments.size(); i++) {
                 Appointment current = appointments.get(i);
-                if (current.compareTo(tempAppointment)==0) {
+                String currUpperF = current.getPatient().getFName().toUpperCase();
+                String upperF = currentPatientCAN.getFName().toUpperCase();
+
+                String currUpperL = current.getPatient().getLName().toUpperCase();
+                String upperL = currentPatientCAN.getLName().toUpperCase();
+
+                if (current.getDate().equals(appointmentDateCAN) && current.getTimeslot().equals(timeslotCAN) && currUpperF.equals(upperF) && currUpperL.equals(upperL)) {
                     appointmentToCancel = current;
                     break;
                 }
@@ -348,14 +362,23 @@ public class ClinicManager {
      * @return the assigned technician, or null if no technician is available
      */
     // Method to assign the next available technician for a specific room type and timeslot
+    private int technicianRotationIndex = 0;
     private Technician assignTechnicianForService(Timeslot timeslot, Radiology roomType) {
-        for (int i = 0; i < providers.size(); i++) {
-            Provider provider = providers.get(i);
+        int technicianCount = technicianRotation.size();
+
+        // Start from the current technician index and rotate through the list
+        for (int i = 0; i < technicianCount; i++) {
+            // Calculate the technician's index in a circular manner
+            int currentIndex = (technicianRotationIndex + i) % technicianCount;
+            Provider provider = technicianRotation.get(currentIndex);
+
             if (provider instanceof Technician) {
                 Technician technician = (Technician) provider;
 
-                // Check if the technician is available at the requested timeslot
+                // Check if the technician is available at the requested timeslot and room type
                 if (isTechnicianAvailable(technician, timeslot, roomType)) {
+                    // Update the rotation index to point to the next technician for future assignments
+                    technicianRotationIndex = (currentIndex + 1) % technicianCount;
                     return technician;
                 }
             }
@@ -402,6 +425,10 @@ public class ClinicManager {
      */
     private void sortingApp (char key){
         Sort.appointment(appointments, key);
+        if (appointments.isEmpty()){
+            System.out.println("Schedule calendar is empty.");
+            return;
+        }
         if (key == 'A'){
             System.out.println("** All Appointments ordered by date/time/provider **");
             for(int i = 0; i<appointments.size(); i++){
@@ -448,6 +475,10 @@ public class ClinicManager {
      * Prints the credit statements for all providers. (PC command)
      */
     private void printCreditStatements () {
+        if (appointments.isEmpty()){
+            System.out.println("Schedule calendar is empty.");
+            return;
+        }
         System.out.println("** Credit amount ordered by provider **");
         Sort.provider(providers);
         for (int i = 0; i < providers.size(); i++) {
@@ -478,6 +509,10 @@ public class ClinicManager {
      * Prints the billing statements for all patients. (PS command)
      */
     private void printBillingStatements() {
+        if (appointments.isEmpty()){
+            System.out.println("Schedule calendar is empty.");
+            return;
+        }
         System.out.println("** Billing statement ordered by patient **");
         List<Patient> patients = new List<>();
 
@@ -491,7 +526,6 @@ public class ClinicManager {
                 // If not, add the patient to the uniquePatients list
                 patients.add(currentPatient);
             }
-
         }
 
         //add the visits for each patient
@@ -551,6 +585,9 @@ public class ClinicManager {
             System.out.println(patient.getFName() + " " + patient.getLName() + " " + patient.getDOB() + " [Credit amount: $" + totalCost + "]");
         }
 
+        List<Appointment> empty = new List<>();
+        appointments = empty;
+
         System.out.println("** end of list **");
     }
 
@@ -575,6 +612,8 @@ public class ClinicManager {
         loadProviders();
         System.out.println("Providers loaded successfully.");
         displayProviders();
+        displayTechnicianRotation();
+
     }
     // Display the loaded providers
     private void displayProviders() {
@@ -613,6 +652,32 @@ public class ClinicManager {
             System.out.println("Error: providers.txt file not found.");
         }
 
+    }
+
+    // Method to initialize and display the rotation list for technicians
+    private void displayTechnicianRotation() {
+        technicianRotation = new List<>();
+
+        // Add only technicians to the technician rotation list
+        for (Provider provider : providers) {
+            if (provider instanceof Technician) {
+                technicianRotation.add((Technician) provider);
+            }
+        }
+
+        // Display the technician rotation list
+        System.out.println("Rotation list for the technicians:");
+        for (int i = 0; i < technicianRotation.size(); i++) {
+            Technician tech = technicianRotation.get(i);
+            System.out.print(tech.getProfile() + " (" + tech.getLocation() + ")");
+
+            // Add arrows between technicians, and wrap around at the end
+            if (i < technicianRotation.size() - 1) {
+                System.out.print(" --> ");
+            } else {
+                System.out.println();  // End the line after the last technician
+            }
+        }
     }
 
 

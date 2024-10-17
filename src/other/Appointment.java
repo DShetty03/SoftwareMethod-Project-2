@@ -54,7 +54,11 @@ public class Appointment implements Comparable<Appointment> {
      * @return the patient profile
      */
     public Patient getPatient() {
-        return ((Patient) patient);
+        if (patient instanceof Patient) {
+            return (Patient) patient;
+        } else {
+            throw new ClassCastException("The object is not an instance of Patient");
+        }
     }
 
     /**
