@@ -1,4 +1,8 @@
-package other;
+package util;
+import other.Appointment;
+import other.*;
+
+
 
 /**
  * A generic Sort class for sorting elements in a List.

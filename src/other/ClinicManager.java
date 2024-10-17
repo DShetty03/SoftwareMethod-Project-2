@@ -3,6 +3,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 import util.Date;
+import util.List;
+import util.Sort;
 
 /**
  * This class represents the entire scheduler of the program.
